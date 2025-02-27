@@ -1,0 +1,97 @@
+List<Map<String, dynamic>> library = [];
+
+
+void addBook({
+
+  required String title,
+  String author = 'Unknown',
+  int year = 0,
+  String genre = 'General',
+}) {
+  library.add({
+    'title': title,
+    'author': author,
+    'year': year,
+    'genre': genre,
+  });
+  print('Book added successfully.');
+}
+
+
+
+dynamic getBookInfo({required String title}) {
+
+  for (var book in library) {
+    if (book['title'] == title) {
+      return {
+        'author': book['author'],
+        'year': book['year'],
+        'genre': book['genre'],
+      };
+    }
+  }
+
+  return 'Book not found.';
+}
+
+
+void listAllBooks({String genre = ''}) {
+
+  List<Map<String, dynamic>> booksToShow = [];
+  if (genre.isEmpty) {
+    booksToShow = List.from(library);
+  } else {
+    booksToShow = library.where((book) => book['genre'] == genre).toList();
+  }
+  if (booksToShow.isEmpty) {
+    print('No books found${genre.isNotEmpty ? ' in genre $genre' : ''}.');
+  } else {
+    print('Listing all books${genre.isNotEmpty ? ' in genre $genre' : ''}:');
+    for (var book in booksToShow) {
+      print('Title: ${book['title']}, Author: ${book['author']}, Year: ${book['year']}, Genre: ${book['genre']}');
+    }
+
+  }
+}
+
+dynamic listBooksByGenre({required String genre}) {
+
+  var booksInGenre = library.where((book) => book['genre'] == genre).toList();
+  if (booksInGenre.isEmpty) {
+    return 'No books found for genre $genre.';
+  } else {
+    return booksInGenre;
+  }
+}
+
+String removeBook({required String title}) {
+
+  int initialLength = library.length;
+  library.removeWhere((book) => book['title'] == title);
+  return initialLength > library.length ? 'Book removed successfully.' : 'Book not found.';
+
+}
+
+
+
+void main() {
+  addBook(title: "Dart Basics", author: "John Doe", year: 2023, genre: "Programming");
+  addBook(title: "Flutter Guide", genre: "Programming");
+  addBook(title: "Mystery Book", genre: "Mystery");
+
+  listAllBooks();
+  listAllBooks(genre: "Programming");
+
+
+  print(getBookInfo(title: "Flutter Guide")); 
+  print(getBookInfo(title: "Unknown Book")); 
+
+
+  print(listBooksByGenre(genre: "Programming")); 
+  print(listBooksByGenre(genre: "Sci-Fi")); 
+
+
+
+  print(removeBook(title: "Dart Basics")); 
+  print(removeBook(title: "Non-Existent")); 
+}
